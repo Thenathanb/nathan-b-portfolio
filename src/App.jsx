@@ -4,12 +4,32 @@ import * as THREE from "three";
 
 const navLinks = [
   { label: "Work", href: "#experience" },
-  { label: "Projects", href: "#projects" },
   { label: "About", href: "#about" },
+  { label: "Projects", href: "#projects" },
   { label: "Contact +", href: "#contact" },
 ];
 
 const experienceItems = [
+  {
+    id: "ibm",
+    company: "IBM",
+    title: "Software Developer Co-op",
+    team: "IBM Data Infrastructure",
+    dates: "Aug 2026 — Present",
+    location: "San Jose, CA",
+    description:
+      "Built reliability fixes across the document ingestion pipeline of OpenRAG, IBM's open-source RAG platform (4.6k+ GitHub stars), shipping 8 PRs in Python/FastAPI and TypeScript/Next.js, including OpenSearch bulk-write retries, connector sync fixes and ingestion validation.",
+  },
+  {
+    id: "jpmorgan",
+    company: "JPMorgan Chase",
+    title: "Software Engineer Intern",
+    team: "JPMorgan Chase — AI Usage",
+    dates: "Jun 2026 — Aug 2026",
+    location: "Plano, TX",
+    description:
+      "Built a full-stack AI cost intelligence dashboard (React/TypeScript) processing 3.1M+ rows of LLM spend data through an offline Node.js ETL pipeline, supporting real-time multi-dimensional filtering without shipping raw data to the browser.",
+  },
   {
     id: "uh-lab",
     company: "University of Houston",
@@ -237,7 +257,10 @@ const ExperienceDetail = ({ item }) => (
       <h3 className="text-2xl font-semibold sm:text-3xl">{item.title}</h3>
       <span className="text-sm text-white/50">{item.dates}</span>
     </div>
-    <span className="info-pill">{item.location}</span>
+    <div className="flex flex-wrap gap-2">
+      {item.team && <span className="info-pill">{item.team}</span>}
+      {item.location && <span className="info-pill">{item.location}</span>}
+    </div>
     <p className="text-white/70 leading-relaxed">{item.description}</p>
   </motion.div>
 );
@@ -343,13 +366,13 @@ export default function App() {
                   <p className="text-xs uppercase tracking-[0.3em] text-white/40">
                     Availability
                   </p>
-                  <p className="mt-2 text-sm">Fall 2026</p>
+                  <p className="mt-2 text-sm">Summer 2027</p>
                 </div>
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-white/40">
                     Location
                   </p>
-                  <p className="mt-2 text-sm">Houston</p>
+                  <p className="mt-2 text-sm">San Jose</p>
                 </div>
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-white/40">
@@ -412,7 +435,7 @@ export default function App() {
                     <br />
                     832-946-6005
                     <br />
-                    Houston, TX
+                    San Jose, CA
                   </p>
                 </div>
               </div>
@@ -511,21 +534,21 @@ export default function App() {
           >
             <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
               <p className="text-xs uppercase tracking-[0.3em] text-white/40">
-                CourseMate UH
+                CourseMate
               </p>
-              <h3 className="mt-4 text-xl font-semibold">CourseMate UH</h3>
+              <h3 className="mt-4 text-xl font-semibold">CourseMate</h3>
               <p className="mt-4 text-white/70 leading-relaxed">
                 Built a Chrome extension integrating Rate My Professor&apos;s
                 GraphQL API, reducing professor research time by 85% for 1,200+
                 University of Houston students.
               </p>
               <a
-                href="https://thenathanb.github.io/CourseMate-UH/privacy-policy.html"
+                href="https://chromewebstore.google.com/detail/coursemate/opdladhnlkndlddmfmclfgknogjhnenl"
                 target="_blank"
                 rel="noreferrer"
                 className="mt-4 inline-flex text-sm text-white/70 transition hover:text-white"
               >
-                Learn more →
+                Chrome Web Store →
               </a>
             </div>
 
@@ -635,7 +658,7 @@ export default function App() {
 
             <div className="flex items-center justify-center lg:justify-end">
               <a
-                href="#"
+                href="mailto:nathanbakare1@gmail.com"
                 className="flex h-28 w-28 items-center justify-center rounded-full bg-accent text-sm font-semibold text-black transition hover:scale-105"
               >
                 Get in touch
@@ -680,7 +703,7 @@ export default function App() {
       </main>
 
       <footer className="section-wrap border-t border-white/10 py-8 text-xs uppercase tracking-[0.25em] text-white/40">
-        © 2026 · Nathan Bakare
+        Last updated {__BUILD_DATE__}
       </footer>
     </div>
   );

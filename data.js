@@ -27,10 +27,14 @@ window.PORTFOLIO_DATA = {
   ],
   projects: [
     {
-      title: "CourseMate UH",
-      image: { src: "coursemate .jpg", alt: "CourseMate UH preview" },
+      title: "CourseMate",
+      image: { src: "coursemate .jpg", alt: "CourseMate preview" },
       description:
         "Built a Chrome extension integrating Rate My Professor's GraphQL API, reducing professor research time by 85% for 1,200+ University of Houston students.",
+      link: {
+        label: "Chrome Web Store",
+        href: "https://chromewebstore.google.com/detail/coursemate/opdladhnlkndlddmfmclfgknogjhnenl",
+      },
       tools: {
         languages: ["JavaScript", "HTML", "CSS", "JSON"],
         tools: ["Chrome Extensions API", "GraphQL"],
@@ -59,6 +63,6 @@ window.PORTFOLIO_DATA = {
     },
     { label: "GitHub", href: "https://github.com/Thenathanb" },
   ],
-  resumeUrl: "",
+  resumeUrl: "/Nathan-Bakare-Resume.pdf",
   eyebrow: "Portfolio",
 };
