@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import * as THREE from "three";
+
+const WireframeSphere = lazy(() => import("./WireframeSphere.jsx"));
 
 const navLinks = [
   { label: "Work", href: "#experience" },
@@ -17,8 +18,12 @@ const experienceItems = [
     team: "IBM Data Infrastructure",
     dates: "Aug 2026 — Present",
     location: "San Jose, CA",
-    description:
+    link: { label: "OpenRAG on GitHub", href: "https://github.com/langflow-ai/openrag" },
+    bullets: [
       "Built reliability fixes across the document ingestion pipeline of OpenRAG, IBM's open-source RAG platform (4.6k+ GitHub stars), shipping fixes in Python/FastAPI and TypeScript/Next.js, including OpenSearch bulk-write retries, connector sync fixes and ingestion validation.",
+      "Own automated test coverage (pytest) for OpenRAG's FastAPI backend across document ingestion and retrieval workflows, cutting manual regression-testing time by 14% ahead of each release.",
+      "Work directly with maintainers through code review on an open-source repository with 400+ forks.",
+    ],
   },
   {
     id: "jpmorgan",
@@ -27,8 +32,11 @@ const experienceItems = [
     team: "JPMorgan Chase — AI Usage",
     dates: "Jun 2026 — Aug 2026",
     location: "Plano, TX",
-    description:
+    bullets: [
       "Built a full-stack AI cost intelligence dashboard (React/TypeScript) processing 3.1M+ rows of LLM spend data through an offline Node.js ETL pipeline, supporting real-time multi-dimensional filtering without shipping raw data to the browser.",
+      "Wrote a unit-tested (Vitest) analytics engine for spend anomaly detection, budget forecasting and ranked cost-saving opportunities, used by finance stakeholders to review FinOps spend.",
+      "Integrated Databricks Genie through a secure Vite server-side proxy and built client-side export to Excel, PDF and PowerPoint, cutting manual reporting steps for the cost-governance team.",
+    ],
   },
   {
     id: "uh-lab",
@@ -36,8 +44,10 @@ const experienceItems = [
     title: "Computer Lab Assistant",
     dates: "Aug 2024 — Present",
     location: "Houston, TX",
-    description:
-      "Provided technical support to 50+ students and staff monthly, improving lab efficiency by 20%. Implemented weekly maintenance for 40 lab computers and conducted five training sessions on popular software. Delivered one-on-one guidance to 15 users monthly to improve technical confidence and productivity.",
+    bullets: [
+      "Provide technical support to 50+ students and staff monthly, improving lab efficiency by 20%.",
+      "Run weekly maintenance for 40 lab computers and led five training sessions on popular software.",
+    ],
   },
   {
     id: "colorstack",
@@ -45,8 +55,11 @@ const experienceItems = [
     title: "Events Chair",
     dates: "Jun 2025 — Present",
     location: "Houston, TX",
-    description:
-      "Planned and executed 5+ technical and career events per semester, boosting engagement by 40%. Partnered with 10+ companies and campus groups to support 100+ underrepresented students in tech. Led a team of four to host the largest event of the semester, driving 60% new member sign-ups.",
+    bullets: [
+      "Plan and run 5+ technical and career events per semester, boosting engagement by 40%.",
+      "Partner with 10+ companies and campus groups to support 100+ underrepresented students in tech.",
+      "Led a team of four to host the semester's largest event, driving 60% new member sign-ups.",
+    ],
   },
   {
     id: "nsbe",
@@ -54,105 +67,114 @@ const experienceItems = [
     title: "FEB Programs",
     dates: "Aug 2025 — Present",
     location: "Houston, TX",
-    description:
-      "Won 1st place in NSBE’s STEM Craft competition out of 10+ teams. Raised $327 through fundraising to sponsor member attendance at the regional conference. Mentored five middle school students in a pre-collegiate STEM initiative and supported outreach events promoting STEM education.",
+    bullets: [
+      "Won 1st place in NSBE's STEM Craft competition out of 10+ teams.",
+      "Raised $327 to sponsor member attendance at the regional conference and mentored five middle school students in a pre-collegiate STEM program.",
+    ],
+  },
+];
+
+const projects = [
+  {
+    title: "CourseMate",
+    date: "Jan 2026",
+    bullets: [
+      "Chrome extension that shows Rate My Professors ratings directly inside UH's course registration flow, so students don't have to switch tabs.",
+      "Async scraping system that fetches and caches ratings for 2,000+ UH professors.",
+      "Local caching and rate limiting (1 req/sec) cut external lookups by 30% while staying within provider limits.",
+    ],
+    stack: ["JavaScript", "HTML", "CSS", "GraphQL"],
+    links: [
+      {
+        label: "Chrome Web Store",
+        href: "https://chromewebstore.google.com/detail/coursemate/opdladhnlkndlddmfmclfgknogjhnenl",
+      },
+      { label: "GitHub", href: "https://github.com/Thenathanb/CourseMate" },
+    ],
+  },
+  {
+    title: "E-Commerce Demand Forecasting",
+    date: "Mar 2025",
+    bullets: [
+      "Trained an LSTM in PyTorch on 500K+ sales records to forecast 30-day demand across 15 product categories, reaching an MAE of 2 units.",
+      "Built an MLOps pipeline (Airflow + MLflow) that automates feature extraction from sales data and review text (BERT) for retraining.",
+      "Deployed an XGBoost stockout-risk classifier with Flask and Docker at 89% precision on held-out data.",
+    ],
+    stack: ["Python", "PyTorch", "XGBoost", "Flask", "Docker"],
+    links: [],
+  },
+  {
+    title: "ExploreMoves — RSVP",
+    date: "May 2025",
+    bullets: [
+      "Designed and built an inline RSVP feature (Yes / No / Maybe) for a social event-sharing app.",
+      "Added real-time RSVP updates, load-tested with 10+ simultaneous users.",
+    ],
+    stack: ["React", "TypeScript", "Tailwind CSS", "Node.js", "JWT Auth"],
+    links: [{ label: "ExploreMoves", href: "https://exploremoves.com/" }],
   },
 ];
 
 const stats = [
-  "3 ORGANIZATIONS",
-  "1+ YEARS EXPERIENCE",
-  "2 PROJECTS",
-  "6 TECH STACK",
+  "IBM + JPMorgan Chase",
+  "4.6K+ ★ Open Source",
+  "3.1M+ Rows Processed",
+  "3.87 GPA",
 ];
 
 const highlights = [
-  "Supported **50+ students and staff** monthly with hands-on technical help.",
-  "Executed **5+ events per semester** to grow community engagement.",
-  "Partnered with **10+ companies** to expand access for students in tech.",
-  "Mentored **middle school students** through STEM design challenges.",
+  "Built an AI cost dashboard over **3.1M+ rows** of LLM spend data at JPMorgan Chase.",
+  "Contributing to **OpenRAG**, IBM's open-source RAG platform with **4.6k+ GitHub stars**.",
+  "Cut manual regression-testing time by **14%** with pytest coverage for OpenRAG's backend.",
+  "Trained an LSTM on **500K+ sales records** to forecast demand with an MAE of 2 units.",
 ];
 
-const skillTabs = {
-  "Technical Skills": [
-    {
-      title: "Full-Stack",
-      skills: [
-        { name: "Web Development", value: 92 },
-        { name: "API Integration", value: 86 },
-        { name: "Extension Development", value: 84 },
-      ],
-    },
-    {
-      title: "Frontend",
-      skills: [
-        { name: "React / React Native", value: 88 },
-        { name: "UI Engineering", value: 85 },
-        { name: "Performance Tuning", value: 80 },
-      ],
-    },
-    {
-      title: "Backend",
-      skills: [
-        { name: "Node.js Services", value: 82 },
-        { name: "GraphQL", value: 78 },
-        { name: "Data Handling", value: 80 },
-      ],
-    },
-  ],
-  "Frameworks & Tools": [
-    {
-      title: "Frameworks",
-      skills: [
-        { name: "React", value: 88 },
-        { name: "React Native", value: 84 },
-        { name: "Tailwind CSS", value: 80 },
-      ],
-    },
-    {
-      title: "Platforms",
-      skills: [
-        { name: "Chrome Extensions", value: 86 },
-        { name: "GitHub", value: 82 },
-        { name: "Firebase", value: 74 },
-      ],
-    },
-    {
-      title: "Tooling",
-      skills: [
-        { name: "VS Code", value: 90 },
-        { name: "Figma", value: 72 },
-        { name: "Notion", value: 84 },
-      ],
-    },
-  ],
-  Languages: [
-    {
-      title: "Programming Languages",
-      skills: [
-        { name: "JavaScript", value: 90 },
-        { name: "TypeScript", value: 82 },
-        { name: "Python", value: 78 },
-      ],
-    },
-    {
-      title: "Data",
-      skills: [
-        { name: "SQL", value: 80 },
-        { name: "JSON", value: 88 },
-        { name: "HTML/CSS", value: 92 },
-      ],
-    },
-    {
-      title: "Scripting",
-      skills: [
-        { name: "Bash", value: 70 },
-        { name: "Rust", value: 62 },
-        { name: "Java", value: 76 },
-      ],
-    },
-  ],
-};
+const skillGroups = [
+  {
+    title: "Languages",
+    skills: ["Python", "TypeScript", "JavaScript", "Java", "C", "SQL", "HTML/CSS"],
+  },
+  {
+    title: "Frameworks & Libraries",
+    skills: [
+      "React",
+      "Next.js",
+      "Node.js",
+      "Express.js",
+      "FastAPI",
+      "Flask",
+      "PyTorch",
+      "XGBoost",
+      "Tailwind CSS",
+    ],
+  },
+  {
+    title: "Tools & Platforms",
+    skills: [
+      "Git / GitHub",
+      "Docker",
+      "OpenSearch",
+      "Langflow",
+      "Docling",
+      "Airflow",
+      "MLflow",
+      "GraphQL",
+      "pytest",
+      "Vitest",
+    ],
+  },
+];
+
+const Emphasis = ({ text }) =>
+  text.split(/\*\*(.+?)\*\*/).map((part, index) =>
+    index % 2 ? (
+      <span key={index} className="font-semibold text-white">
+        {part}
+      </span>
+    ) : (
+      part
+    )
+  );
 
 const fadeIn = {
   initial: { opacity: 0, y: 24 },
@@ -160,89 +182,6 @@ const fadeIn = {
   viewport: { once: true, amount: 0.2 },
   transition: { duration: 0.6, ease: "easeOut" },
 };
-
-const WireframeSphere = () => {
-  const mountRef = useRef(null);
-
-  useEffect(() => {
-    const mount = mountRef.current;
-    if (!mount) return;
-
-    const scene = new THREE.Scene();
-    const camera = new THREE.PerspectiveCamera(45, 1, 0.1, 1000);
-    camera.position.z = 4.2;
-
-    const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
-    renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(mount.clientWidth, mount.clientHeight);
-    mount.appendChild(renderer.domElement);
-
-    const geometry = new THREE.SphereGeometry(1.3, 32, 32);
-    const material = new THREE.MeshBasicMaterial({
-      color: 0xffffff,
-      wireframe: true,
-      transparent: true,
-      opacity: 0.6,
-    });
-    const sphere = new THREE.Mesh(geometry, material);
-    scene.add(sphere);
-
-    let frameId;
-    const animate = () => {
-      sphere.rotation.y += 0.0035;
-      sphere.rotation.x += 0.0025;
-      renderer.render(scene, camera);
-      frameId = requestAnimationFrame(animate);
-    };
-    animate();
-
-    const handleResize = () => {
-      if (!mount) return;
-      const { clientWidth, clientHeight } = mount;
-      renderer.setSize(clientWidth, clientHeight);
-      camera.aspect = clientWidth / clientHeight;
-      camera.updateProjectionMatrix();
-    };
-
-    window.addEventListener("resize", handleResize);
-
-    return () => {
-      cancelAnimationFrame(frameId);
-      window.removeEventListener("resize", handleResize);
-      geometry.dispose();
-      material.dispose();
-      renderer.dispose();
-      if (renderer.domElement.parentNode) {
-        renderer.domElement.parentNode.removeChild(renderer.domElement);
-      }
-    };
-  }, []);
-
-  return (
-    <div
-      ref={mountRef}
-      className="h-64 w-64 sm:h-72 sm:w-72 lg:h-96 lg:w-96"
-    />
-  );
-};
-
-const SkillBar = ({ name, value }) => (
-  <div className="space-y-2">
-    <div className="flex items-center justify-between text-sm">
-      <span className="text-white/80">{name}</span>
-      <span className="text-white/50">{value}%</span>
-    </div>
-    <div className="h-[6px] rounded-full bg-white/10">
-      <motion.div
-        className="h-full rounded-full bg-accent"
-        initial={{ width: 0 }}
-        whileInView={{ width: `${value}%` }}
-        viewport={{ once: true }}
-        transition={{ duration: 1.1, ease: "easeOut" }}
-      />
-    </div>
-  </div>
-);
 
 const ExperienceDetail = ({ item }) => (
   <motion.div
@@ -261,17 +200,31 @@ const ExperienceDetail = ({ item }) => (
       {item.team && <span className="info-pill">{item.team}</span>}
       {item.location && <span className="info-pill">{item.location}</span>}
     </div>
-    <p className="text-white/70 leading-relaxed">{item.description}</p>
+    <ul className="space-y-3 text-white/70 leading-relaxed">
+      {item.bullets.map((bullet) => (
+        <li key={bullet} className="flex gap-3">
+          <span className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-accent" />
+          <span>{bullet}</span>
+        </li>
+      ))}
+    </ul>
+    {item.link && (
+      <a
+        href={item.link.href}
+        target="_blank"
+        rel="noreferrer"
+        className="inline-flex text-sm text-white/70 transition hover:text-white"
+      >
+        {item.link.label} →
+      </a>
+    )}
   </motion.div>
 );
 
 export default function App() {
   const [menuOpen, setMenuOpen] = useState(false);
-  const [activeTab, setActiveTab] = useState("Technical Skills");
   const [activeCompany, setActiveCompany] = useState(experienceItems[0]);
   const [localTime, setLocalTime] = useState("");
-
-  const tabData = useMemo(() => skillTabs[activeTab], [activeTab]);
 
   useEffect(() => {
     const updateTime = () => {
@@ -358,7 +311,9 @@ export default function App() {
                 <span className="block font-semibold">Bakare</span>
               </h1>
               <p className="mt-6 max-w-xl text-lg text-white/70">
-                ECE student at University of Houston building useful projects.
+                Computer Engineering student at the University of Houston
+                building backend, AI and data infrastructure. Currently a
+                Software Developer Co-op at IBM.
               </p>
 
               <div className="mt-10 grid gap-6 border-t border-white/10 pt-6 sm:grid-cols-3">
@@ -389,7 +344,13 @@ export default function App() {
               className="relative flex items-center justify-center"
             >
               <div className="absolute -right-6 top-4 h-24 w-24 rounded-full border border-accent/50" />
-              <WireframeSphere />
+              <Suspense
+                fallback={
+                  <div className="h-64 w-64 sm:h-72 sm:w-72 lg:h-96 lg:w-96" />
+                }
+              >
+                <WireframeSphere />
+              </Suspense>
             </motion.div>
           </div>
         </section>
@@ -404,14 +365,16 @@ export default function App() {
             </h2>
             <div className="mt-10 grid gap-10 lg:grid-cols-[1.2fr_0.8fr]">
               <p className="text-white/70 leading-relaxed">
-                I build systems that blend{" "}
-                <span className="font-semibold text-white">user-focused</span>{" "}
-                design with{" "}
-                <span className="font-semibold text-white">practical</span>{" "}
-                engineering. I enjoy shipping projects that improve student
-                workflows and create{" "}
-                <span className="font-semibold text-white">real-world</span>{" "}
-                impact on campus.
+                I build{" "}
+                <span className="font-semibold text-white">full-stack</span>{" "}
+                and backend systems that hold up in{" "}
+                <span className="font-semibold text-white">production</span>.
+                At IBM I work on OpenRAG, an open-source retrieval-augmented
+                generation platform, and at JPMorgan Chase I built an AI cost
+                intelligence dashboard over millions of rows of LLM spend data.
+                I care about{" "}
+                <span className="font-semibold text-white">reliable</span>{" "}
+                pipelines, well-tested code and tools people actually use.
               </p>
               <div className="grid gap-8 sm:grid-cols-2">
                 <div>
@@ -423,7 +386,12 @@ export default function App() {
                     <br />
                     B.S. Computer Engineering
                     <br />
-                    2024 — 2028
+                    GPA 3.87 · Expected May 2028
+                    <br />
+                    <span className="text-white/50">
+                      Data Structures &amp; Algorithms, Operating Systems,
+                      Database Systems, Software Engineering
+                    </span>
                   </p>
                 </div>
                 <div>
@@ -432,8 +400,6 @@ export default function App() {
                   </p>
                   <p className="mt-4 text-sm text-white/70">
                     nathanbakare1@gmail.com
-                    <br />
-                    832-946-6005
                     <br />
                     San Jose, CA
                   </p>
@@ -448,10 +414,9 @@ export default function App() {
                 {highlights.map((item, index) => (
                   <div key={item} className="flex gap-4">
                     <span className="text-sm text-white/40">0{index + 1}</span>
-                    <p
-                      className="text-white/70"
-                      dangerouslySetInnerHTML={{ __html: item }}
-                    />
+                    <p className="text-white/70">
+                      <Emphasis text={item} />
+                    </p>
                   </div>
                 ))}
               </div>
@@ -474,8 +439,8 @@ export default function App() {
             <motion.div {...fadeIn}>
               <h2 className="text-3xl font-light sm:text-4xl">Experience</h2>
               <p className="mt-4 text-white/60">
-                A timeline of my professional journey crafting intelligent
-                products, collaborating with global teams, and shipping to scale.
+                Open-source AI infrastructure at IBM, internal AI tooling at
+                JPMorgan Chase, and community work at the University of Houston.
               </p>
               <div className="mt-8 space-y-3">
                 {experienceItems.map((item) => (
@@ -522,93 +487,78 @@ export default function App() {
           <motion.div {...fadeIn}>
             <h2 className="text-3xl font-light sm:text-4xl">Projects</h2>
             <p className="mt-4 text-white/60">
-              Selected work focused on student productivity, product experience,
-              and real-time collaboration.
+              Selected work across browser extensions, machine learning and
+              real-time product features.
             </p>
           </motion.div>
 
           <motion.div
             {...fadeIn}
             transition={{ duration: 0.6, delay: 0.1 }}
-            className="mt-10 grid gap-6 lg:grid-cols-2"
+            className="mt-10 grid gap-6 lg:grid-cols-3"
           >
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/40">
-                CourseMate
-              </p>
-              <h3 className="mt-4 text-xl font-semibold">CourseMate</h3>
-              <p className="mt-4 text-white/70 leading-relaxed">
-                Built a Chrome extension integrating Rate My Professor&apos;s
-                GraphQL API, reducing professor research time by 85% for 1,200+
-                University of Houston students.
-              </p>
-              <a
-                href="https://chromewebstore.google.com/detail/coursemate/opdladhnlkndlddmfmclfgknogjhnenl"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-flex text-sm text-white/70 transition hover:text-white"
+            {projects.map((project) => (
+              <div
+                key={project.title}
+                className="flex flex-col rounded-2xl border border-white/10 bg-white/5 p-6"
               >
-                Chrome Web Store →
-              </a>
-            </div>
-
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-6">
-              <p className="text-xs uppercase tracking-[0.3em] text-white/40">
-                ExploreMoves
-              </p>
-              <h3 className="mt-4 text-xl font-semibold">ExploreMoves</h3>
-              <p className="mt-4 text-white/70 leading-relaxed">
-                Designed and built an RSVP feature for a social event-sharing
-                app. Added inline RSVP (Yes/No/Maybe) to boost engagement by 30%
-                and developed real-time updates for 10+ simultaneous users
-                during testing.
-              </p>
-              <a
-                href="https://exploremoves.com/"
-                target="_blank"
-                rel="noreferrer"
-                className="mt-4 inline-flex text-sm text-white/70 transition hover:text-white"
-              >
-                ExploreMoves →
-              </a>
-            </div>
+                <p className="text-xs uppercase tracking-[0.3em] text-white/40">
+                  {project.date}
+                </p>
+                <h3 className="mt-4 text-xl font-semibold">{project.title}</h3>
+                <ul className="mt-4 space-y-3 text-sm text-white/70 leading-relaxed">
+                  {project.bullets.map((bullet) => (
+                    <li key={bullet} className="flex gap-3">
+                      <span className="mt-[0.6em] h-1 w-1 shrink-0 rounded-full bg-accent" />
+                      <span>{bullet}</span>
+                    </li>
+                  ))}
+                </ul>
+                <div className="mt-6 flex flex-wrap gap-2">
+                  {project.stack.map((tool) => (
+                    <span
+                      key={tool}
+                      className="rounded-full border border-white/10 px-3 py-1 text-xs text-white/60"
+                    >
+                      {tool}
+                    </span>
+                  ))}
+                </div>
+                {project.links.length > 0 && (
+                  <div className="mt-auto flex flex-wrap gap-5 pt-6">
+                    {project.links.map((link) => (
+                      <a
+                        key={link.href}
+                        href={link.href}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="text-sm text-white/70 transition hover:text-white"
+                      >
+                        {link.label} →
+                      </a>
+                    ))}
+                  </div>
+                )}
+              </div>
+            ))}
           </motion.div>
         </section>
 
         <section id="expertise" className="section-wrap pb-24">
-          <div className="grid gap-8 lg:grid-cols-[0.6fr_1fr]">
-            <motion.div {...fadeIn}>
-              <h2 className="text-3xl font-light sm:text-4xl">Expertise</h2>
-              <p className="mt-4 text-white/60">
-                A blend of technical depth and systems thinking, spanning
-                full-stack delivery, AI research, and user-centered engineering.
-              </p>
-            </motion.div>
-            <motion.div {...fadeIn} transition={{ duration: 0.6, delay: 0.1 }}>
-              <div className="flex flex-wrap gap-3">
-                {Object.keys(skillTabs).map((tab) => (
-                  <button
-                    key={tab}
-                    onClick={() => setActiveTab(tab)}
-                    className={`rounded-full border px-4 py-2 text-xs uppercase tracking-[0.25em] transition ${
-                      activeTab === tab
-                        ? "border-accent text-white"
-                        : "border-white/10 text-white/50 hover:border-white/30"
-                    }`}
-                  >
-                    {tab}
-                  </button>
-                ))}
-              </div>
-            </motion.div>
-          </div>
+          <motion.div {...fadeIn}>
+            <h2 className="text-3xl font-light sm:text-4xl">Expertise</h2>
+            <p className="mt-4 max-w-2xl text-white/60">
+              The languages, frameworks and tools I use day to day across
+              backend services, frontends and machine learning.
+            </p>
+          </motion.div>
 
           <motion.div
             {...fadeIn}
-            transition={{ duration: 0.6, delay: 0.15 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
             className="mt-10 grid gap-8 lg:grid-cols-3"
           >
-            {tabData.map((group) => (
+            {skillGroups.map((group) => (
               <div
                 key={group.title}
                 className="rounded-2xl border border-white/10 bg-white/5 p-6"
@@ -616,9 +566,14 @@ export default function App() {
                 <h3 className="text-sm uppercase tracking-[0.3em] text-white/60">
                   {group.title}
                 </h3>
-                <div className="mt-6 space-y-6">
+                <div className="mt-6 flex flex-wrap gap-2">
                   {group.skills.map((skill) => (
-                    <SkillBar key={skill.name} {...skill} />
+                    <span
+                      key={skill}
+                      className="rounded-full border border-white/15 px-3 py-1.5 text-sm text-white/80"
+                    >
+                      {skill}
+                    </span>
                   ))}
                 </div>
               </div>
@@ -648,10 +603,12 @@ export default function App() {
                   nathanbakare1@gmail.com
                 </a>
                 <a
-                  href="tel:+18329466005"
+                  href="https://www.linkedin.com/in/nathan-bakare-b7b0b3326/"
+                  target="_blank"
+                  rel="noreferrer"
                   className="rounded-full border border-white/20 px-5 py-2 text-sm transition hover:border-accent"
                 >
-                  832-946-6005
+                  LinkedIn
                 </a>
               </div>
             </div>
