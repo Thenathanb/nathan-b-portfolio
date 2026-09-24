@@ -18,7 +18,7 @@ const experienceItems = [
     dates: "Aug 2026 — Present",
     location: "San Jose, CA",
     description:
-      "Built reliability fixes across the document ingestion pipeline of OpenRAG, IBM's open-source RAG platform (4.6k+ GitHub stars), shipping 8 PRs in Python/FastAPI and TypeScript/Next.js, including OpenSearch bulk-write retries, connector sync fixes and ingestion validation.",
+      "Built reliability fixes across the document ingestion pipeline of OpenRAG, IBM's open-source RAG platform (4.6k+ GitHub stars), shipping fixes in Python/FastAPI and TypeScript/Next.js, including OpenSearch bulk-write retries, connector sync fixes and ingestion validation.",
   },
   {
     id: "jpmorgan",
