@@ -115,13 +115,6 @@ const projects = [
   },
 ];
 
-const stats = [
-  "IBM + JPMorgan Chase",
-  "4.6K+ ★ Open Source",
-  "3.1M+ Rows Processed",
-  "3.87 GPA",
-];
-
 const highlights = [
   "Built an AI cost dashboard over **3.1M+ rows** of LLM spend data at JPMorgan Chase.",
   "Contributing to **OpenRAG**, IBM's open-source RAG platform with **4.6k+ GitHub stars**.",
@@ -469,17 +462,6 @@ export default function App() {
                 <ExperienceDetail item={activeCompany} />
               </AnimatePresence>
             </motion.div>
-          </div>
-
-          <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {stats.map((stat) => (
-              <div
-                key={stat}
-                className="rounded-xl border border-white/10 bg-white/5 px-5 py-6 text-xs uppercase tracking-[0.25em] text-white/70"
-              >
-                {stat}
-              </div>
-            ))}
           </div>
         </section>
 
