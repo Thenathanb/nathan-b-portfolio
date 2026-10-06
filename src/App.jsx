@@ -20,9 +20,9 @@ const experienceItems = [
     location: "San Jose, CA",
     link: { label: "OpenRAG on GitHub", href: "https://github.com/langflow-ai/openrag" },
     bullets: [
-      "Built reliability fixes across the document ingestion pipeline of OpenRAG, IBM's open-source RAG platform (4.6k+ GitHub stars), shipping fixes in Python/FastAPI and TypeScript/Next.js, including OpenSearch bulk-write retries, connector sync fixes and ingestion validation.",
-      "Own automated test coverage (pytest) for OpenRAG's FastAPI backend across document ingestion and retrieval workflows, cutting manual regression-testing time by 14% ahead of each release.",
-      "Work directly with maintainers through code review on an open-source repository with 400+ forks.",
+      "Resolved user-facing bugs across OpenRAG's TypeScript/Next.js frontend, fixing a stale-state race condition that made search bar buttons need two clicks, surfacing inline error tooltips on failed Knowledge table rows, and correcting a WCAG 1.4.11 contrast failure in the data grid.",
+      "Diagnosed and resolved backend reliability bugs in OpenRAG's Python/FastAPI ingestion pipeline, closing a filename-resolution gap across 6 document connectors (Google Drive, SharePoint, OneDrive, S3, Azure Blob, IBM COS) and adding retry logic to OpenSearch bulk indexing that eliminated false failure reports on files that had actually indexed successfully.",
+      "Designed a proposed event-driven ingestion architecture connecting Confluent Kafka to OpenRAG's ingestion gateway and IBM watsonx embedding models, replacing batch processing with real-time CREATE/UPDATE/DELETE event handling and a content-aware router across three embedding models.",
     ],
   },
   {
@@ -118,7 +118,7 @@ const projects = [
 const highlights = [
   "Built an AI cost dashboard over **3.1M+ rows** of LLM spend data at JPMorgan Chase.",
   "Contributing to **OpenRAG**, IBM's open-source RAG platform with **4.6k+ GitHub stars**.",
-  "Cut manual regression-testing time by **14%** with pytest coverage for OpenRAG's backend.",
+  "Fixed ingestion bugs across **6 document connectors** and added OpenSearch retry logic in OpenRAG's backend.",
   "Trained an LSTM on **500K+ sales records** to forecast demand with an MAE of 2 units.",
 ];
 
