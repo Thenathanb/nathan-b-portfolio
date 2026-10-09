@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import GitHubActivity from "./GitHubActivity.jsx";
 
 const WireframeSphere = lazy(() => import("./WireframeSphere.jsx"));
 
@@ -425,6 +426,8 @@ export default function App() {
               </div>
             </div>
           </motion.div>
+
+          <GitHubActivity />
         </section>
 
         <section id="experience" className="section-wrap pb-24">
