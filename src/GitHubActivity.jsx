@@ -26,6 +26,15 @@ const monthNames = [
   "Dec",
 ];
 
+const MONTHS_SHOWN = 6;
+
+const lastMonths = (days) => {
+  const cutoff = new Date();
+  cutoff.setMonth(cutoff.getMonth() - MONTHS_SHOWN);
+  const from = cutoff.toISOString().slice(0, 10);
+  return days.filter((day) => day.date >= from);
+};
+
 const toWeeks = (days) => {
   const firstWeekday = new Date(`${days[0].date}T00:00:00Z`).getUTCDay();
   const cells = [...Array(firstWeekday).fill(null), ...days];
@@ -62,13 +71,14 @@ export default function GitHubActivity() {
 
   useEffect(() => {
     let cancelled = false;
-    fetch(API_URL)
+    fetch(API_URL, { cache: "no-store" })
       .then((response) => (response.ok ? response.json() : null))
       .then((json) => {
-        if (!cancelled && json?.contributions?.length) {
+        const days = lastMonths(json?.contributions ?? []);
+        if (!cancelled && days.length) {
           setData({
-            weeks: toWeeks(json.contributions),
-            total: json.total?.lastYear ?? 0,
+            weeks: toWeeks(days),
+            total: days.reduce((sum, day) => sum + day.count, 0),
           });
         }
       })
@@ -97,7 +107,7 @@ export default function GitHubActivity() {
       </div>
 
       <div className="mt-6 overflow-x-auto pb-2">
-        <div className="flex min-w-[720px] flex-col gap-2">
+        <div className="flex max-w-[640px] flex-col gap-2">
           <div className="flex gap-[3px] text-xs text-white/40">
             {data.weeks.map((week, index) => (
               <span key={index} className="w-0 flex-1 whitespace-nowrap">
@@ -126,7 +136,7 @@ export default function GitHubActivity() {
       </div>
 
       <div className="mt-4 flex flex-wrap items-center justify-between gap-4 text-xs text-white/50">
-        <span>{data.total.toLocaleString()} contributions in the last year</span>
+        <span>{data.total.toLocaleString()} contributions in the last {MONTHS_SHOWN} months</span>
         <span className="flex items-center gap-[3px]">
           <span className="mr-2">Less</span>
           {levelClasses.map((levelClass) => (
