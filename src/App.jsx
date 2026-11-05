@@ -148,6 +148,8 @@ const skillGroups = [
       "Git / GitHub",
       "Docker",
       "OpenSearch",
+      "Kafka (Confluent Cloud)",
+      "IBM watsonx.ai",
       "Langflow",
       "Docling",
       "Airflow",
