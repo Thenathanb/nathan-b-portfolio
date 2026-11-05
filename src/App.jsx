@@ -21,9 +21,9 @@ const experienceItems = [
     location: "San Jose, CA",
     link: { label: "OpenRAG on GitHub", href: "https://github.com/langflow-ai/openrag" },
     bullets: [
-      "Resolved user-facing bugs across OpenRAG's TypeScript/Next.js frontend, fixing a stale-state race condition that made search bar buttons need two clicks, surfacing inline error tooltips on failed Knowledge table rows, and correcting a WCAG 1.4.11 contrast failure in the data grid.",
+      "Built a Python retrieval evaluation harness for OpenRAG that scores search, chunking and embedding changes against an extensible set of hand-labeled questions using recall@k, MRR and nDCG@k, with question-level run comparison that caught a 0.036 recall@5 shift from a chunk-size change.",
       "Diagnosed and resolved backend reliability bugs in OpenRAG's Python/FastAPI ingestion pipeline, closing a filename-resolution gap across 6 document connectors (Google Drive, SharePoint, OneDrive, S3, Azure Blob, IBM COS) and adding retry logic to OpenSearch bulk indexing that eliminated false failure reports on files that had actually indexed successfully.",
-      "Designed a proposed event-driven ingestion architecture connecting Confluent Kafka to OpenRAG's ingestion gateway and IBM watsonx embedding models, replacing batch processing with real-time CREATE/UPDATE/DELETE event handling and a content-aware router across three embedding models.",
+      "Built a real-time ingestion pipeline in Python that keeps a search index in sync with Confluence through Kafka (Confluent Cloud), IBM watsonx.ai and OpenSearch. Page edits became searchable in 3.6 seconds, and the pipeline is safe to retry and replay with no stale or duplicate results, covered by 102 automated tests.",
     ],
   },
   {
