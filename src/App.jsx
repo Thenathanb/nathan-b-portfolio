@@ -329,7 +329,7 @@ export default function App() {
                   <p className="text-xs uppercase tracking-[0.3em] text-white/40">
                     Contact
                   </p>
-                  <p className="mt-2 text-sm">nathanbakare1@gmail.com</p>
+                  <p className="mt-2 text-sm">nathanbakare1 [at] gmail.com</p>
                 </div>
               </div>
             </motion.div>
@@ -395,7 +395,7 @@ export default function App() {
                     Contact
                   </p>
                   <p className="mt-4 text-sm text-white/70">
-                    nathanbakare1@gmail.com
+                    nathanbakare1 [at] gmail.com
                     <br />
                     San Jose, CA
                   </p>
@@ -587,7 +587,7 @@ export default function App() {
                   href="mailto:nathanbakare1@gmail.com"
                   className="rounded-full border border-white/20 px-5 py-2 text-sm transition hover:border-accent"
                 >
-                  nathanbakare1@gmail.com
+                  nathanbakare1 [at] gmail.com
                 </a>
                 <a
                   href="https://www.linkedin.com/in/nathan-bakare-b7b0b3326/"
