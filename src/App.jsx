@@ -312,7 +312,7 @@ export default function App() {
                 Software Developer Co-op at IBM.
               </p>
 
-              <div className="mt-10 grid gap-6 border-t border-white/10 pt-6 sm:grid-cols-3">
+              <div className="mt-10 grid gap-6 border-t border-white/10 pt-6 sm:grid-cols-[1fr_1fr_auto]">
                 <div>
                   <p className="text-xs uppercase tracking-[0.3em] text-white/40">
                     Availability
@@ -329,7 +329,9 @@ export default function App() {
                   <p className="text-xs uppercase tracking-[0.3em] text-white/40">
                     Contact
                   </p>
-                  <p className="mt-2 text-sm">nathanbakare1 [at] gmail.com</p>
+                  <p className="mt-2 whitespace-nowrap text-sm">
+                    nathanbakare1 [at] gmail.com
+                  </p>
                 </div>
               </div>
             </motion.div>
@@ -395,7 +397,9 @@ export default function App() {
                     Contact
                   </p>
                   <p className="mt-4 text-sm text-white/70">
-                    nathanbakare1 [at] gmail.com
+                    <span className="whitespace-nowrap">
+                      nathanbakare1 [at] gmail.com
+                    </span>
                     <br />
                     San Jose, CA
                   </p>
